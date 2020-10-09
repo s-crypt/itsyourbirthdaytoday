@@ -82,6 +82,7 @@
     }
   }
 
+  var syllable = require('syllable')
   function removeBlockedWords (text) {
     var foundBlockedText = false
 
@@ -98,6 +99,7 @@
     return foundBlockedText ? DEFAULT_NAME : text
   }
 
+  // var speakDelay = 53
   var hashName = decodeURIComponent(window.location.hash.slice(1))
   var name = removeBlockedWords(hashName || DEFAULT_NAME)
   var nameToSay
@@ -110,6 +112,8 @@
 
   var ratsIntro = document.getElementById('ratsIntro')
   var ratsName = document.getElementById('ratsName')
+  var ratsNameInstrumental1 = document.getElementById('ratsNameInstrumental1')
+  var ratsNameInstrumental2 = document.getElementById('ratsNameInstrumental2')
   var ratsCakeAndIcecream = document.getElementById('ratsCakeAndIcecream')
   var ratsSuchAGoodBoy = document.getElementById('ratsSuchAGoodBoy')
 
@@ -126,36 +130,33 @@
 
   ratsButton.addEventListener('click', function () {
     ratsIntro.play()
-
-    ratsName.play()
-    ratsName.pause()
-
-    ratsCakeAndIcecream.play()
-    ratsCakeAndIcecream.pause()
-
-    ratsSuchAGoodBoy.play()
-    ratsSuchAGoodBoy.pause()
-
-    ratsButton.innerHTML = 'loading...'
-    ratsButton.disabled = true
+    setTimeout(function () {
+      sayRatsName()
+    }, (7354 + 219)
+  )
   })
 
   ratsIntro.addEventListener('playing', function () {
     ratsButton.style.display = 'none'
   })
 
-  ratsIntro.addEventListener('ended', function () {
-    sayRatsName()
-  })
+  // ratsIntro.addEventListener('ended', function () {
+    // sayRatsName()
+  // })
 
-  ratsName.addEventListener('ended', handleRatsNameEnd)
+  var syllablesProcessed = 0
+  var totalSyllables
 
-  ratsCakeAndIcecream.addEventListener('ended', function () {
-    sayRatsName()
-  })
+  // ratsCakeAndIcecream.addEventListener('ended', function () {
+    // sayRatsName()
+  // })
 
   ratsSuchAGoodBoy.addEventListener('ended', function () {
     ratsIntro.play()
+    setTimeout(function () {
+      sayRatsName()
+    }, (7354 + 250)
+  )
   })
 
   setName()
@@ -179,6 +180,9 @@
   function handleRatsNameEnd () {
     if (firstTry) {
       ratsCakeAndIcecream.play()
+      setTimeout(function () {
+        sayRatsName()
+      }, (3357 + 180))
     } else {
       ratsSuchAGoodBoy.play()
     }
@@ -187,20 +191,25 @@
   }
 
   function setNameToSay () {
+    totalSyllables = syllable(name)
     if (!hasSpeechSupport) {
       return
     }
     nameToSay = new window.SpeechSynthesisUtterance(name)
+
     nameToSay.pitch = 0.8
     nameToSay.rate = 1.25
     nameToSay.lang = 'en-US'
+
+    var voices = window.speechSynthesis.getVoices()
+    nameToSay.voice = voices[0]
 
     speechHasStarted = false
     nameToSay.onstart = function () {
       speechHasStarted = true
     }
     nameToSay.onend = function () {
-      if (!speechHasErrored) {
+      if (!speechHasErrored && !handled) {
         handleRatsNameEnd()
       }
     }
@@ -208,15 +217,35 @@
       speechHasErrored = true
       sayRatsName()
     }
+    var handled = false
+    nameToSay.onboundary = function () {
+      syllablesProcessed++
+      if (!speechHasErrored && syllablesProcessed === (totalSyllables) && firstTry === false && handled === false) {
+        setTimeout(function () { handleRatsNameEnd() }, 256)
+        handled = true
+      } else if (!speechHasErrored && syllablesProcessed === (totalSyllables) && firstTry === true && handled === false) {
+        setTimeout(function () { handleRatsNameEnd() }, 286)
+        handled = true
+      }
+    }
   }
 
   function sayRatsName () {
+    syllablesProcessed = 0
     if (name === DEFAULT_NAME || !hasSpeechSupport || !nameToSay || speechHasErrored) {
       ratsName.play()
+      setTimeout(function () { handleRatsNameEnd() }, 420)
       return
     }
     setNameToSay()
+
     window.speechSynthesis.speak(nameToSay)
+
+    if (firstTry === false) {
+      ratsNameInstrumental2.play()
+    } else if (firstTry === true) {
+      ratsNameInstrumental1.play()
+    }
     // If the speech api times out, then fallback to the regular sound.
     setTimeout(function () {
       if (!speechHasStarted) {
