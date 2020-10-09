@@ -8,7 +8,7 @@
     "build:css": "*.css"
   },
   "scripts": {
-    "build:js": "uglifyjs scripts.js --compress --mangle --output scripts.min.js",
+    "build:js": "browserify scripts.js -o bundle.js && uglifyjs bundle.js --compress --mangle --output scripts.min.js",
     "build:css": "cleancss --output styles.min.css styles.css",
     "build": "npm run build:js && npm run build:css",
     "start": "serve ./",
@@ -28,9 +28,14 @@
   "homepage": "https://github.com/nickcolley/itsyourbirthdaytoday#readme",
   "dependencies": {
     "clean-css-cli": "^4.1.10",
+    "ibm-watson": "^5.7.1",
     "npm-watch": "^0.3.0",
     "serve": "^10.1.2",
     "standard": "^10.0.3",
+    "syllable": "^4.1.0",
     "uglify-js": "^3.3.4"
+  },
+  "devDependencies": {
+    "uglifyjs-webpack-plugin": "^2.2.0"
   }
 }
