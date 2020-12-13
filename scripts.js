@@ -81,7 +81,7 @@
       }, delay)
     }
   }
-
+  var syllable = require('syllable')
   function removeBlockedWords (text) {
     var foundBlockedText = false
 
@@ -108,59 +108,85 @@
     ('SpeechSynthesisUtterance' in window)
   )
 
-  var ratsIntro = document.getElementById('ratsIntro')
-  var ratsName = document.getElementById('ratsName')
-  var ratsCakeAndIcecream = document.getElementById('ratsCakeAndIcecream')
-  var ratsSuchAGoodBoy = document.getElementById('ratsSuchAGoodBoy')
+  var ratsIntro
+  var ratsName
+  var ratsCakeAndIcecream
+  var ratsSuchAGoodBoy
+  var ratsSprite = new window.Howl({
+    src: ['rats.mp3'],
+    sprite: {
+      ratsIntro: [0, (7354 + 219)],
+      ratsName: [7600, 550],
+      ratsCakeAndIcecream: [8150, (3357 + 180)],
+      ratsSuchAGoodBoy: [12200, 3709]
+    }
+  })
+  var ratsInstrumental = new window.Howl({
+    src: ['ratsInstrumental.wav']
+  })
 
   var ratsInput = document.querySelector('input')
   var ratsButton = document.querySelector('button')
 
   var firstTry = true
 
-  ratsName.playbackRate = 1.25
-
   ratsInput.value = name
   ratsInput.addEventListener('change', setName)
   ratsInput.addEventListener('keyup', debounce(setName, 200))
 
   ratsButton.addEventListener('click', function () {
+<<<<<<< HEAD
+    // Play and pause sprites so we can get their IDs.
+    ratsSprite.mute(true)
+    ratsIntro = ratsSprite.play('ratsIntro')
+    ratsSprite.pause(ratsIntro)
+=======
     window.requestAnimationFrame(animate)
     video.play()
 
     ratsIntro.play()
+>>>>>>> master
 
-    ratsName.play()
-    ratsName.pause()
+    ratsName = ratsSprite.play('ratsName')
+    ratsSprite.pause(ratsName)
 
-    ratsCakeAndIcecream.play()
-    ratsCakeAndIcecream.pause()
+    ratsCakeAndIcecream = ratsSprite.play('ratsCakeAndIcecream')
+    ratsSprite.pause(ratsCakeAndIcecream)
 
-    ratsSuchAGoodBoy.play()
-    ratsSuchAGoodBoy.pause()
+    ratsSuchAGoodBoy = ratsSprite.play('ratsSuchAGoodBoy')
+    ratsSprite.pause(ratsSuchAGoodBoy)
 
+    // Start it off
+    ratsSprite.mute(false)
+    ratsSprite.play(ratsIntro)
     ratsButton.innerHTML = 'loading...'
     ratsButton.disabled = true
+
+    ratsSprite.on('play', function () {
+      ratsButton.style.display = 'none'
+    }, ratsIntro)
+
+    ratsSprite.on('end', function () {
+      sayRatsName()
+    }, ratsIntro)
+
+    ratsSprite.on('end', function () {
+      handleRatsNameEnd()
+    }, ratsName)
+
+    ratsSprite.on('end', function () {
+      sayRatsName()
+    }, ratsCakeAndIcecream)
+
+    ratsSprite.on('end', function () {
+      // Start a bit at the start to get it on beat.
+      ratsSprite.seek(0.3, ratsIntro)
+      ratsSprite.play(ratsIntro)
+    }, ratsSuchAGoodBoy)
   })
 
-  ratsIntro.addEventListener('playing', function () {
-    ratsButton.style.display = 'none'
-  })
-
-  ratsIntro.addEventListener('ended', function () {
-    sayRatsName()
-  })
-
-  ratsName.addEventListener('ended', handleRatsNameEnd)
-
-  ratsCakeAndIcecream.addEventListener('ended', function () {
-    sayRatsName()
-  })
-
-  ratsSuchAGoodBoy.addEventListener('ended', function () {
-    ratsIntro.play()
-  })
-
+  var syllablesProcessed = 0
+  var totalSyllables
   setName()
   setNameToSay()
 
@@ -181,15 +207,23 @@
 
   function handleRatsNameEnd () {
     if (firstTry) {
-      ratsCakeAndIcecream.play()
+      ratsSprite.play(ratsCakeAndIcecream)
     } else {
-      ratsSuchAGoodBoy.play()
+      ratsSprite.play(ratsSuchAGoodBoy)
     }
 
     firstTry = !firstTry
   }
-
+  function search (nameKey, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].name === nameKey) {
+        return myArray[i]
+      }
+    }
+    return false
+  }
   function setNameToSay () {
+    totalSyllables = syllable(name)
     if (!hasSpeechSupport) {
       return
     }
@@ -197,13 +231,26 @@
     nameToSay.pitch = 0.8
     nameToSay.rate = 1.25
     nameToSay.lang = 'en-US'
+    var voices = window.speechSynthesis.getVoices()
+    var voice
+    // forgive me for i have sinned
+    if (search('Microsoft David Desktop - English (United States)', voices) !== false) { // windows
+      voice = search('Microsoft David Desktop - English (United States)', voices)
+    } else if (search('Fred (en-US)', voices) !== false) { // ios
+      voice = search('Fred (en-US)', voices)
+    } else if (search('English United States (en_US)', voices) !== false) { // android
+      voice = search('English United States (en_US)', voices)
+    } else if (search('English (America) (en-US)', voices) !== false) { // ubuntu
+      voice = search('English (America) (en-US)', voices)
+    }
+    nameToSay.voice = voice
 
     speechHasStarted = false
     nameToSay.onstart = function () {
       speechHasStarted = true
     }
     nameToSay.onend = function () {
-      if (!speechHasErrored) {
+      if (!speechHasErrored && !handled) {
         handleRatsNameEnd()
       }
     }
@@ -211,14 +258,23 @@
       speechHasErrored = true
       sayRatsName()
     }
+    var handled = false
+    nameToSay.onboundary = function () {
+      syllablesProcessed++
+      if (!speechHasErrored && syllablesProcessed === (totalSyllables) && handled === false) {
+        setTimeout(function () { handleRatsNameEnd() }, 330)
+        handled = true
+      }
+    }
   }
 
   function sayRatsName () {
+    syllablesProcessed = 0
     if (name === DEFAULT_NAME || !hasSpeechSupport || !nameToSay || speechHasErrored) {
-      ratsName.play()
-      return
+      return ratsSprite.play(ratsName)
     }
     setNameToSay()
+    ratsInstrumental.play()
     window.speechSynthesis.speak(nameToSay)
     // If the speech api times out, then fallback to the regular sound.
     setTimeout(function () {
