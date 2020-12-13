@@ -32,7 +32,7 @@
     "gender": "0.0.1",
     "gender-detection": "^0.1.0",
     "npm-watch": "^0.3.0",
-    "serve": "^10.1.2",
+    "serve": "^11.3.2",
     "standard": "^10.0.3",
     "syllable": "^4.1.0",
     "uglify-js": "^3.3.4"
