@@ -109,6 +109,7 @@
     ('speechSynthesis' in window) &&
     ('SpeechSynthesisUtterance' in window)
   )
+  var gender = require('gender-detection')
 
   var ratsIntro = document.getElementById('ratsIntro')
   var ratsName = document.getElementById('ratsName')
@@ -116,6 +117,7 @@
   var ratsNameInstrumental2 = document.getElementById('ratsNameInstrumental2')
   var ratsCakeAndIcecream = document.getElementById('ratsCakeAndIcecream')
   var ratsSuchAGoodBoy = document.getElementById('ratsSuchAGoodBoy')
+  var ratsSuchAGoodGirl = document.getElementById('ratsSuchAGoodGirl')
 
   var ratsInput = document.querySelector('input')
   var ratsButton = document.querySelector('button')
@@ -129,6 +131,8 @@
   ratsInput.addEventListener('keyup', debounce(setName, 200))
 
   ratsButton.addEventListener('click', function () {
+    window.requestAnimationFrame(animate)
+    video.play()
     ratsIntro.play()
     setTimeout(function () {
       sayRatsName()
@@ -152,6 +156,13 @@
   // })
 
   ratsSuchAGoodBoy.addEventListener('ended', function () {
+    ratsIntro.play()
+    setTimeout(function () {
+      sayRatsName()
+    }, (7354 + 250)
+  )
+  })
+  ratsSuchAGoodGirl.addEventListener('ended', function () {
     ratsIntro.play()
     setTimeout(function () {
       sayRatsName()
@@ -184,10 +195,23 @@
         sayRatsName()
       }, (3357 + 180))
     } else {
-      ratsSuchAGoodBoy.play()
+      if (gender.detect(name) === 'female') {
+        ratsSuchAGoodGirl.play()
+      } else {
+        ratsSuchAGoodBoy.play()
+      }
     }
 
     firstTry = !firstTry
+  }
+
+  function search (nameKey, myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].name === nameKey) {
+        return myArray[i]
+      }
+    }
+    return false
   }
 
   function setNameToSay () {
@@ -202,7 +226,18 @@
     nameToSay.lang = 'en-US'
 
     var voices = window.speechSynthesis.getVoices()
-    nameToSay.voice = voices[0]
+    var voice
+    // forgive me for i have sinned
+    if (search('Microsoft David Desktop - English (United States)', voices) !== false) { // windows
+      voice = search('Microsoft David Desktop - English (United States)', voices)
+    } else if (search('Fred (en-US)', voices) !== false) { // ios
+      voice = search('Fred (en-US)', voices)
+    } else if (search('English United States (en_US)', voices) !== false) { // android
+      voice = search('English United States (en_US)', voices)
+    } else if (search('English (America) (en-US)', voices) !== false) { // ubuntu
+      voice = search('English (America) (en-US)', voices)
+    }
+    nameToSay.voice = voice
 
     speechHasStarted = false
     nameToSay.onstart = function () {
@@ -220,6 +255,8 @@
     var handled = false
     nameToSay.onboundary = function () {
       syllablesProcessed++
+      console.log('syllablesProcessed ' + syllablesProcessed)
+      console.log('totalSyllables ' + totalSyllables)
       if (!speechHasErrored && syllablesProcessed === (totalSyllables) && firstTry === false && handled === false) {
         setTimeout(function () { handleRatsNameEnd() }, 256)
         handled = true
@@ -255,3 +292,24 @@
     }, 3000)
   }
 })()
+
+var video = document.createElement('video')
+video.src = 'rats.mp4'
+
+var canvas = document.getElementById('canvas')
+var ctx = canvas.getContext('2d')
+function animate () {
+  ctx.imageSmoothingEnabled = false // disabling image smoothing makes it look much nicer in my opinion
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+  window.requestAnimationFrame(animate)
+}
+
+video.onended = videoRepeat // repeat the video
+function videoRepeat () {
+  window.requestAnimationFrame(animate)
+  video.play()
+}
+
+window.onload = function () { // have to draw one frame at the start before the users clicks
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+}

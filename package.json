@@ -28,10 +28,20 @@
   "homepage": "https://github.com/nickcolley/itsyourbirthdaytoday#readme",
   "dependencies": {
     "clean-css-cli": "^4.1.10",
+    "detect-gender": "^1.0.0",
+    "gender": "0.0.1",
+    "gender-detection": "^0.1.0",
     "npm-watch": "^0.3.0",
     "serve": "^10.1.2",
     "standard": "^10.0.3",
     "syllable": "^4.1.0",
     "uglify-js": "^3.3.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "babel-preset-env": "^1.7.0",
+    "babelify": "^10.0.0"
   }
 }

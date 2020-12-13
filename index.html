@@ -26,11 +26,17 @@
       <audio id="ratsName" src="tunes/ratsName.mp3" type="audio/mp3" preload></audio>
       <audio id="ratsCakeAndIcecream" src="tunes/ratsCakeAndIcecream.mp3" type="audio/mp3" preload></audio>
       <audio id="ratsSuchAGoodBoy" src="tunes/ratsSuchAGoodBoy.mp3" type="audio/mp3" preload></audio>
+      <audio id="ratsSuchAGoodGirl" src="tunes/ratsSuchAGoodGirl.wav" type="audio/wav" preload></audio>
       <audio id="ratsNameInstrumental1" src="tunes/ratsNameInstrumental1.mp3" type="audio/mp3" preload></audio>
       <audio id="ratsNameInstrumental2" src="tunes/ratsNameInstrumental2.mp3" type="audio/mp3" preload></audio>
 
-      <img class="video" src="rats.gif" alt="Family dancing to son's happy birthday song"/>
 
+      <canvas id='canvas' width='544' height='306' class="video" alt="Family dancing to son's happy birthday song">
+		<img class="video" src="rats.gif" alt="Family dancing to son's happy birthday song"/>
+		<!-- if browser doesn't support html5 canvas, fallback to gif -->
+	  </canvas>
+	<!-- if you're wondering why we set the width and height here, if you dont the image comes out all pixelated and garbage for whatever reason-->
+	
       <div class="links">
           <span>
               <a href="https://www.youtube.com/watch?v=mNy9HIo3shs">bless you jerma <3</a>
@@ -41,6 +47,6 @@
       </div>
     </main>
 
-    <script src="bundle.js"></script>
+    <script src="scripts.min.js"></script>
 </body>
 </html>
