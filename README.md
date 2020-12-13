@@ -1,6 +1,6 @@
-# [itsyourbirthday.today](https://itsyourbirthday.today)
+# [birthday.jerma.io](https://birthday.jerma.io)
 
-![Family dancing to their favourite Rats song](https://itsyourbirthday.today/rats.gif)
+![Family dancing to their favourite Rats song](https://birthday.jerma.io/rats.gif)
 
 ## install
 
