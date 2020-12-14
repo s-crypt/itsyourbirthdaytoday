@@ -208,7 +208,7 @@
         sayRatsName()
       }, (3357 + 180))
     } else {
-      if (gender.detect(name) === 'female' && female.checked === true) {
+      if ((gender.detect(name) === 'female' && female.checked === true) || female.checked === true) {
         ratsSuchAGoodGirl.play()
       } else {
         ratsSuchAGoodBoy.play()
