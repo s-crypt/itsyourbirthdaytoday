@@ -124,6 +124,13 @@
 
   var firstTry = true
 
+  var male = document.getElementById('male')
+  var female = document.getElementById('female')
+  if (gender.detect(name) === 'female') {
+    female.checked = true
+  } else {
+    male.checked = true
+  }
   ratsName.playbackRate = 1.25
 
   ratsInput.value = name
@@ -184,6 +191,12 @@
       name = DEFAULT_NAME
     }
 
+    if (gender.detect(name) === 'female') {
+      female.checked = true
+    } else {
+      male.checked = true
+    }
+
     window.location.hash = encodeURIComponent(name)
     window.document.title = name + ' it\'s your birthday today'
   }
@@ -195,7 +208,7 @@
         sayRatsName()
       }, (3357 + 180))
     } else {
-      if (gender.detect(name) === 'female') {
+      if (gender.detect(name) === 'female' && female.checked === true) {
         ratsSuchAGoodGirl.play()
       } else {
         ratsSuchAGoodBoy.play()

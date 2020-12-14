@@ -153,3 +153,29 @@ canvas {
   image-rendering: pixelated;                 
   -ms-interpolation-mode: nearest-neighbor;   
 }
+
+#gender {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	width: 8vw;
+	bottom: 0;
+	align-items: stretch;
+	align-content: space-evenly;
+	left: 10px;
+	padding-bottom: 1vw;
+}
+
+#gender > *{
+    display: flex;
+	flex-direction: row;
+    align-items: center;
+}
+
+#gender > * > *{
+    flex: 1;
+}
+
+#gender > * > label {
+	position: static;
+}

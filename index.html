@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>its your birthday today</title>
-    <link rel="stylesheet" href="styles.min.css">
+    <link rel="stylesheet" href="styles.css">
     <script>
       // In the head so it executes quicker
       // Redirect github link to the new domain.
@@ -20,6 +20,16 @@
       <div class="input-wrapper">
         <input id="ratsInput" type="text" name="name" value="michael" />
         <label for="ratsInput">name</label>
+		<div id="gender">
+			<div>
+				<input type="radio" id="male" name="gender" value="male" checked="true">
+				<label for="male">Male</label><br>
+			</div>
+			<div>
+				<input type="radio" id="female" name="gender" value="female">
+				<label for="female">Female</label><br>
+			</div>
+		</div>
       </div>
 
       <audio id="ratsIntro" src="tunes/ratsIntro.mp3" type="audio/mp3" preload></audio>
