@@ -12,25 +12,6 @@
         var redirectHref = 'http://itsyourbirthday.today/' + window.location.hash;
         window.location.replace(redirectHref);
       }
-    </script>
-	<!-- Matomo -->
-	<script type="text/javascript">
-	  var _paq = window._paq = window._paq || [];
-	  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-	  _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-	  _paq.push(["setCookieDomain", "*.jerma.io"]);
-	  _paq.push(['trackPageView']);
-	  _paq.push(['enableLinkTracking']);
-	  (function() {
-		var u="https://jerma.matomo.cloud/";
-		_paq.push(['setTrackerUrl', u+'matomo.php']);
-		_paq.push(['setSiteId', '1']);
-		var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-		g.type='text/javascript'; g.async=true; g.src='//cdn.matomo.cloud/jerma.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
-	  })();
-	</script>
-	<noscript><p><img src="https://jerma.matomo.cloud/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
-	<!-- End Matomo Code -->
 </head>
 <body>
     <main>
@@ -77,5 +58,6 @@
     </main>
 
     <script src="scripts.min.js"></script>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8a624e372b2b42baa0649413c7246f5e"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
