@@ -27,20 +27,20 @@
   },
   "homepage": "https://github.com/nickcolley/itsyourbirthdaytoday#readme",
   "dependencies": {
-    "clean-css-cli": "^5.3.0",
+    "clean-css-cli": "^5.5.2",
     "detect-gender": "^1.0.0",
     "gender": "0.0.1",
     "gender-detection": "^0.1.0",
-    "npm-watch": "^0.9.0",
-    "serve": "^11.3.2",
-    "standard": "^16.0.3",
+    "npm-watch": "^0.11.0",
+    "serve": "^13.0.2",
+    "standard": "^16.0.4",
     "syllable": "^5.0.0",
-    "uglify-js": "^3.13.6"
+    "uglify-js": "^3.15.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.16",
-    "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.1",
+    "@babel/cli": "^7.17.0",
+    "@babel/core": "^7.17.2",
+    "@babel/preset-env": "^7.16.11",
     "babel-preset-env": "^1.7.0",
     "babelify": "^10.0.0"
   }
